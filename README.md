@@ -8,7 +8,6 @@ A Python-based fixed-length text compressor developed by **Qubitbytes Ltd**. It 
 - **No Metadata**: Output (`compressed.hex`) contains only the bitstream and EOS, minimizing size.
 - **Table-Based**: Requires `table.txt` (default: `a,b,c,...,z,space`) for encoding/decoding, with the same table needed for both.
 - **Compression Ratio**: 1.38 for `"hello world"` (11 bytes → 8 bytes, 55-bit bitstream + 5-bit EOS with default table).
-- **Multiple Texts**: Encode multiple texts into separate `.hex` files, decode with matching `table.txt`.
 - **Stats**: Reports original size, compressed size (bytes/bits), bitstream size, and ratio.
 - **No Dependencies**: Uses only Python standard library.
 
