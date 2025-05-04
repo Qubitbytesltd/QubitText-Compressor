@@ -19,3 +19,42 @@ A Python-based fixed-length text compressor that encodes text using variable bit
    git clone https://github.com/yourusername/QubitText-Compressor.git
    cd QubitText-Compressor
    ```
+
+## Usage
+
+```bash
+python QubitText-Compressor.py <mode> [--file <input_file>] [--text <input_text>] [--table <table_file>]
+```
+
+### Example
+
+**Encode the string `"hello world"` using the default character table:**
+```bash
+python QubitText-Compressor.py encode --text "hello world"
+```
+
+This will create a `compressed.hex` file containing the encoded bitstream.
+
+### `<mode>` (required)
+Specifies the operation mode:
+
+- **encode**: Compresses input (text or file) into a hexadecimal bitstream saved as `compressed.hex`.
+- **decode**: Decompresses a hexadecimal bitstream from `compressed.hex` into readable text saved as `decompressed.txt`.
+
+### Optional Flags
+
+- **`--file <input_file>`**  
+  Input file path:  
+  - For **encode**: Path to a `.txt` file containing text to compress.  
+  - For **decode**: Path to a `.hex` file containing the compressed bitstream.
+
+- **`--text <input_text>`**  
+  Direct string input:  
+  - For **encode**: Plain text to compress (e.g., `"hello world"`).  
+  - For **decode**: A hexadecimal string to decompress (less commonly used).
+
+- **`--table <table_file>`**  
+  Path to character table file (default: `table.txt` in current directory).  
+  Must be used for both encoding and decoding if a custom table is involved.
+
+
