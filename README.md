@@ -1,6 +1,6 @@
 # QubitText Compressor
 
-A Python-based fixed-length text compressor developed by **Qubitbytes Ltd**. It encodes text using variable bit-length codes based on a custom alphabet in `table.txt`, defaulting to `a-z,space` (27 chars + EOS, 5 bits) for broad compatibility, or smaller alphabets (e.g., 8 chars + EOS, 4 bits) for better compression. It uses a dynamic end-of-stream (EOS) marker and no metadata, achieving a compression ratio of 1.38 for `"hello world"` (11 bytes to 8 bytes) with the default `a-z,space` table.
+A Python-based fixed-length text compressor that encodes text using variable bit-length codes based on a custom alphabet in `table.txt`, defaulting to `a-z,space` (27 chars + EOS, 5 bits) for broad compatibility, or smaller alphabets (e.g., 8 chars + EOS, 4 bits) for better compression. It uses a dynamic end-of-stream (EOS) marker and no metadata, achieving a compression ratio of 1.38 for `"hello world"` (11 bytes to 8 bytes) with the default `a-z,space` table.
 
 ## Features
 
