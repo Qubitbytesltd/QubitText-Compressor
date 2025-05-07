@@ -38,14 +38,17 @@ class TextCompressor:
         self.code_to_char[self.eos_code] = None  # None indicates EOS
 
     def compress(self, text):
+        # Convert input to lowercase
+        text = text.lower()
+        
         # Validate input
-        for char in text.lower():
+        for char in text:
             if char not in self.char_to_code:
                 raise ValueError(f"Unsupported character: '{char}'")
         
         # Encode text
         bitstream = ''
-        for char in text.lower():
+        for char in text:
             bitstream += self.char_to_code[char]
         
         # Append EOS marker
@@ -99,7 +102,8 @@ def calculate_metrics(original, compressed, bitstream_bits):
     }
 
 def bytes_to_hex(compressed):
-    return compressed.hex()
+    # Format as 0xNN, comma-separated
+    return ','.join(f'0x{byte:02x}' for byte in compressed)
 
 def main():
     parser = argparse.ArgumentParser(description="QubitText Compressor: Variable Bit-Length Encoder/Decoder with EOS")
@@ -122,25 +126,38 @@ def main():
             return
         
         compressed, bitstream_bits = compressor.compress(text)
-        metrics = calculate_metrics(text, compressed, bitstream_bits)
+        metrics = calculate_metrics(text.lower(), compressed, bitstream_bits)
         
-        # Save as hex
+        # Save as formatted hex (0xNN,0xNN)
         hex_output = bytes_to_hex(compressed)
-        output_file = "compressed.hex"
-        with open(output_file, 'w') as f:
+        hex_file = "compressed.hex"
+        with open(hex_file, 'w', encoding='utf-8') as f:
             f.write(hex_output)
         
+        # Save as raw bytes
+        byte_file = "bytestream.txt"
+        with open(byte_file, 'wb') as f:
+            f.write(compressed)
+        
+        print(f"Bits per Character: {compressor.bits_per_char}")
         print(f"Original Size: {metrics['original_size_bytes']} bytes")
         print(f"Compressed Size: {metrics['compressed_size_bytes']} bytes ({metrics['compressed_size_bits']} bits)")
         print(f"Bitstream Size: {metrics['bitstream_bits']} bits")
         print(f"Compression Ratio: {metrics['compression_ratio']:.2f}")
-        print(f"Compressed output saved to {output_file}")
+        print(f"Compressed hex output saved to {hex_file}")
+        print(f"Compressed byte stream saved to {byte_file}")
     
     elif args.mode == "decode":
         if args.file:
-            with open(args.file, 'r') as f:
+            with open(args.file, 'r', encoding='utf-8') as f:
                 hex_input = f.read().strip()
-            compressed = bytes.fromhex(hex_input)
+            # Handle 0xNN,0xNN format or plain hex
+            if hex_input.startswith('0x'):
+                # Parse comma-separated 0xNN values
+                hex_values = hex_input.split(',')
+                compressed = bytearray(int(h, 16) for h in hex_values)
+            else:
+                compressed = bytes.fromhex(hex_input)
         elif args.text:
             compressed = bytes.fromhex(args.text)
         else:
@@ -160,6 +177,7 @@ def main():
             f.write(decompressed)
         
         # Print stats and content
+        print(f"Bits per Character: {compressor.bits_per_char}")
         print(f"Decompressed text saved to {output_file}")
         print(f"Original Size: {metrics['original_size_bytes']} bytes")
         print(f"Compressed Size: {metrics['compressed_size_bytes']} bytes ({metrics['compressed_size_bits']} bits)")
